@@ -10,10 +10,9 @@
 @end
 
 namespace {
-  NSString* const kAssocKey = @"ISASwizzle_NSObject_SetClass";
-  NSString* const kAssocKeyOriginalClass =
-  @"ISASwizzle_NSObject_OriginalClass";
-  NSString* const kAssocKeyClasses = @"ISASwizzle_NSObject_Classes";
+NSString* const kAssocKey = @"ISASwizzle_NSObject_SetClass";
+NSString* const kAssocKeyOriginalClass = @"ISASwizzle_NSObject_OriginalClass";
+NSString* const kAssocKeyClasses = @"ISASwizzle_NSObject_Classes";
 }
 
 @interface NSObject (ISASwizzle_Private)
@@ -43,27 +42,19 @@ static void __init(void) {
 
 @implementation NSObject (ISASwizzle)
 - (void)setClass:(Class)cls {
-  NSMutableDictionary* infos;
-  NSMutableArray* classes;
-  Class originalClass;
-
-  infos = objc_getAssociatedObject(self, kAssocKey);
+  NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
 
   if (infos == nil) {
-    infos = [NSMutableDictionary
-             dictionaryWithObjectsAndKeys:[self class],
-             kAssocKeyOriginalClass,
-             [NSMutableArray arrayWithCapacity:10],
-             kAssocKeyClasses,
-             nil];
-
-    [infos setObject:[self class] forKey:kAssocKeyOriginalClass];
+    infos = [[@{
+      kAssocKeyOriginalClass : [self class],
+      kAssocKeyClasses : [NSMutableArray arrayWithCapacity:10]
+    } mutableCopy] autorelease];
 
     objc_setAssociatedObject(self, kAssocKey, infos, OBJC_ASSOCIATION_RETAIN);
   }
 
-  classes = [infos objectForKey:kAssocKeyClasses];
-  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
+  NSMutableArray* classes = [infos objectForKey:kAssocKeyClasses];
+  Class originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   if (classes.count > 0 || object_getClass(self) != originalClass) {
     [classes addObject:object_getClass(self)];
@@ -221,6 +212,6 @@ int main(void) {
 
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
   }
-  
+
   return EXIT_SUCCESS;
 }
