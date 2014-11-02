@@ -64,17 +64,12 @@ static void __init(void) {
 }
 
 - (Class)originalClass {
-  NSMutableDictionary* infos;
-  Class originalClass;
-
-  infos = objc_getAssociatedObject(self, kAssocKey);
-
+  NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return object_getClass(self);
   }
 
-  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
-
+  Class originalClass = [infos objectForKey:kAssocKeyOriginalClass];
   if (originalClass == nil) {
     return object_getClass(self);
   }
@@ -83,18 +78,13 @@ static void __init(void) {
 }
 
 - (void)restoreClass {
-  NSMutableDictionary* infos;
-  NSMutableArray* classes;
-  Class originalClass;
-
-  infos = objc_getAssociatedObject(self, kAssocKey);
-
+  NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return;
   }
 
-  classes = [infos objectForKey:kAssocKeyClasses];
-  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
+  NSMutableArray* classes = [infos objectForKey:kAssocKeyClasses];
+  Class originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   if (classes.count == 0) {
     object_setClass(self, originalClass);
@@ -108,37 +98,26 @@ static void __init(void) {
 }
 
 - (void)restoreOriginalClass {
-  NSMutableDictionary* infos;
-  NSMutableArray* classes;
-  Class originalClass;
-
-  infos = objc_getAssociatedObject(self, kAssocKey);
-
+  NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return;
   }
 
-  classes = [infos objectForKey:kAssocKeyClasses];
-  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
-
+  NSMutableArray* classes = [infos objectForKey:kAssocKeyClasses];
+  Class originalClass = [infos objectForKey:kAssocKeyOriginalClass];
   [classes removeAllObjects];
 
   object_setClass(self, originalClass);
 }
 
 - (BOOL)hasCustomClass {
-  NSMutableDictionary* infos;
-  NSMutableArray* classes;
-  Class originalClass;
-
-  infos = objc_getAssociatedObject(self, kAssocKey);
-
+  NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return NO;
   }
 
-  classes = [infos objectForKey:kAssocKeyClasses];
-  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
+  NSMutableArray* classes = [infos objectForKey:kAssocKeyClasses];
+  Class originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   if (classes.count > 0 && [classes lastObject] != originalClass) {
     return YES;
@@ -180,19 +159,15 @@ int main(void) {
 
   @autoreleasepool {
     s = @"hello, world";
-
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
     [s setClass:[Foo class]];
-
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
     [s setClass:[Bar class]];
-
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
     [s setClass:[FooBar class]];
-
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
     @try {
@@ -205,11 +180,9 @@ int main(void) {
     }
 
     [s restoreClass];
-
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
     [s restoreOriginalClass];
-
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
   }
 
