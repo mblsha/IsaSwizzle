@@ -151,12 +151,18 @@
 
 - (void)testTracing {
   Person* person = [[Person alloc] init];
+  person.firstName = @"First";
+  person.lastName = @"Last";
   XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
   XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"Person"]);
 
   [person mbl_startTracing];  
   XCTAssert([NSStringFromClass([person class]) isEqual:@"MBLTracer"]);
-  XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"MBLTracer"]);
+  XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"MBLTracing_Person"]);
+
+  // tracer must forward selectors
+  XCTAssert([person.firstName isEqual:@"First"]);
+  XCTAssert([person.lastName isEqual:@"Last"]);
 
   [person mbl_endTracing];  
   XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);

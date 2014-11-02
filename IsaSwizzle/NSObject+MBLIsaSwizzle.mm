@@ -38,6 +38,9 @@ namespace {
     [classes addObject:object_getClass(self)];
   }
 
+  NSAssert(class_getInstanceSize(object_getClass(self)) ==
+               class_getInstanceSize(cls),
+           @"Classes must be the same size to swizzle");
   object_setClass(self, cls);
 }
 
