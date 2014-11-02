@@ -50,30 +50,35 @@
 
   NSString* s = @"hello, world";
   XCTAssert([NSStringFromClass([s class]) isEqual:@"__NSCFConstantString"]);
+  XCTAssertEqual([s hasCustomClass], NO);
 
   [s setClass:[Foo class]];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"Foo"]);
+  XCTAssertEqual([s hasCustomClass], YES);
 
   [s setClass:[Bar class]];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"Bar"]);
+  XCTAssertEqual([s hasCustomClass], YES);
 
   [s setClass:[FooBar class]];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"FooBar"]);
+  XCTAssertEqual([s hasCustomClass], YES);
 
   @try {
-    NSLog(@"Trying to call a no longer valid selector...");
-
     [s length];
   }
   @catch (NSException* e) {
-    NSLog(@"Caught expected exception: %@ - %@", [e name], [e reason]);
+    XCTAssert([[e name] isEqual:@"NSInvalidArgumentException"]);
+    XCTAssert([[e reason] hasPrefix:@"-[FooBar length]: unrecognized selector sent to instance"]);
   }
 
   [s restoreClass];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"Bar"]);
+  XCTAssertEqual([s hasCustomClass], YES);
 
   [s restoreOriginalClass];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"__NSCFConstantString"]);
+  XCTAssertEqual([s hasCustomClass], NO);
 }
 
 @end
