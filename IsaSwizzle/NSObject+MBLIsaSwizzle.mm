@@ -13,6 +13,7 @@
 #import <objc/runtime.h>
 
 namespace {
+  NSString* const kISASwizzleException = @"ISASwizzleException";
   NSString* const kAssocKey = @"ISASwizzle_NSObject_SetClass";
   NSString* const kAssocKeyOriginalClass = @"ISASwizzle_NSObject_OriginalClass";
   NSString* const kAssocKeyClasses = @"ISASwizzle_NSObject_Classes";
@@ -57,6 +58,7 @@ namespace {
 - (void)mbl_restoreClass {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
+    [NSException raise:kISASwizzleException format:@"infos == nil"];
     return;
   }
 
@@ -77,6 +79,7 @@ namespace {
 - (void)mbl_restoreOriginalClass {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
+    [NSException raise:kISASwizzleException format:@"infos == nil"];
     return;
   }
 
