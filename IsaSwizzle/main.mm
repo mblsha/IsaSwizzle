@@ -1,3 +1,5 @@
+// copied from https://github.com/macmade/Code-Tests/blob/master/Objective-C/isa-swizzle.m
+
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
@@ -15,35 +17,9 @@ NSString* const kAssocKeyOriginalClass = @"ISASwizzle_NSObject_OriginalClass";
 NSString* const kAssocKeyClasses = @"ISASwizzle_NSObject_Classes";
 }
 
-@interface NSObject (ISASwizzle_Private)
-- (void)ddna_dealloc;
-@end
-
-@implementation NSObject (ISASwizzle_Private)
-- (void)ddna_dealloc {
-  objc_setAssociatedObject(self, kAssocKey, nil, OBJC_ASSOCIATION_ASSIGN);
-
-  [self ddna_dealloc];
-}
-@end
-
-static void __init(void) __attribute__((constructor));
-static void __init(void) {
-  Class cls;
-  Method m1;
-  Method m2;
-
-  cls = [NSObject class];
-  m1 = class_getInstanceMethod(cls, @selector(dealloc));
-  m2 = class_getInstanceMethod(cls, @selector(ddna_dealloc));
-
-  method_exchangeImplementations(m1, m2);
-}
-
 @implementation NSObject (ISASwizzle)
 - (void)setClass:(Class)cls {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
-
   if (infos == nil) {
     infos = [[@{
       kAssocKeyOriginalClass : [self class],
