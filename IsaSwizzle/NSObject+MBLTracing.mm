@@ -22,22 +22,22 @@
 }
 
 - (id)mbl_retain {
-  NSLog(@"retain");
+  [self mbl_trace:@"retain"];
   return [super retain];
 }
 
 - (void)mbl_release {
-  NSLog(@"release");
+  [self mbl_trace:@"release"];
   [super release];
 }
 
 - (id)mbl_autorelease {
-  NSLog(@"autorelease");
+  [self mbl_trace:@"autorelease"];
   return [super autorelease];
 }
 
 - (void)mbl_dealloc {
-  NSLog(@"dealloc");
+  [self mbl_trace:@"dealloc"];
   [super dealloc];
 }
 
@@ -79,21 +79,22 @@ const char* kTracingPrefix = "MBLTracing_";
     NSAssert(subclass != nil, @"subclass != nil");
 
     // v@: -- void (id self, SEL _cmd)
-    std::map<SEL, const char*> selectors{
-        {@selector(class), "@@:"},
-        {@selector(retain), "@@:"},
-        {@selector(release), "v@:"},
-        {@selector(autorelease), "@@:"},
-        {@selector(dealloc), "v@:"},
+    std::map<SEL, std::pair<SEL, const char*>> selectors{
+        {@selector(class), {@selector(mbl_class), "@@:"}},
+        {@selector(retain), {@selector(mbl_retain), "@@:"}},
+        {@selector(release), {@selector(mbl_release), "v@:"}},
+        {@selector(autorelease), {@selector(mbl_autorelease), "@@:"}},
+        {@selector(dealloc), {@selector(mbl_dealloc), "v@:"}},
+
+        {@selector(mbl_trace:), {@selector(mbl_trace:), "v@:@"}},
     };
-    for (auto selector : selectors) {
-      NSString* mbl_selectorName = [NSString
-          stringWithFormat:@"mbl_%@", NSStringFromSelector(selector.first)];
-      SEL mbl_selector = NSSelectorFromString(mbl_selectorName);
+    for (auto i : selectors) {
+      SEL selector = i.first;
+      SEL mbl_selector = i.second.first;
+      const char* typeEncoding = i.second.second;
 
       IMP imp = class_getMethodImplementation([MBLTracer class], mbl_selector);
-      // NB: watch out for type encodgng!
-      class_addMethod(subclass, selector.first, imp, selector.second);
+      class_addMethod(subclass, selector, imp, typeEncoding);
     }
 
     objc_registerClassPair(subclass);
