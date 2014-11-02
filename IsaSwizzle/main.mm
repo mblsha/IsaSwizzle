@@ -2,34 +2,30 @@
 #import <objc/runtime.h>
 
 @interface NSObject (ISASwizzle)
-
 - (void)setClass:(Class)cls;
 - (Class)originalClass;
 - (void)restoreClass;
 - (void)restoreOriginalClass;
 - (BOOL)hasCustomClass;
-
 @end
 
-static NSString* const __assocKey = @"ISASwizzle_NSObject_SetClass";
-static NSString* const __assocKeyOriginalClass =
-@"ISASwizzle_NSObject_OriginalClass";
-static NSString* const __assocKeyClasses = @"ISASwizzle_NSObject_Classes";
+namespace {
+  NSString* const kAssocKey = @"ISASwizzle_NSObject_SetClass";
+  NSString* const kAssocKeyOriginalClass =
+  @"ISASwizzle_NSObject_OriginalClass";
+  NSString* const kAssocKeyClasses = @"ISASwizzle_NSObject_Classes";
+}
 
 @interface NSObject (ISASwizzle_Private)
-
 - (void)ddna_dealloc;
-
 @end
 
 @implementation NSObject (ISASwizzle_Private)
-
 - (void)ddna_dealloc {
-  objc_setAssociatedObject(self, __assocKey, nil, OBJC_ASSOCIATION_ASSIGN);
+  objc_setAssociatedObject(self, kAssocKey, nil, OBJC_ASSOCIATION_ASSIGN);
 
   [self ddna_dealloc];
 }
-
 @end
 
 static void __init(void) __attribute__((constructor));
@@ -46,29 +42,28 @@ static void __init(void) {
 }
 
 @implementation NSObject (ISASwizzle)
-
 - (void)setClass:(Class)cls {
   NSMutableDictionary* infos;
   NSMutableArray* classes;
   Class originalClass;
 
-  infos = objc_getAssociatedObject(self, __assocKey);
+  infos = objc_getAssociatedObject(self, kAssocKey);
 
   if (infos == nil) {
     infos = [NSMutableDictionary
              dictionaryWithObjectsAndKeys:[self class],
-             __assocKeyOriginalClass,
+             kAssocKeyOriginalClass,
              [NSMutableArray arrayWithCapacity:10],
-             __assocKeyClasses,
+             kAssocKeyClasses,
              nil];
 
-    [infos setObject:[self class] forKey:__assocKeyOriginalClass];
+    [infos setObject:[self class] forKey:kAssocKeyOriginalClass];
 
-    objc_setAssociatedObject(self, __assocKey, infos, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, kAssocKey, infos, OBJC_ASSOCIATION_RETAIN);
   }
 
-  classes = [infos objectForKey:__assocKeyClasses];
-  originalClass = [infos objectForKey:__assocKeyOriginalClass];
+  classes = [infos objectForKey:kAssocKeyClasses];
+  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   if (classes.count > 0 || object_getClass(self) != originalClass) {
     [classes addObject:object_getClass(self)];
@@ -81,13 +76,13 @@ static void __init(void) {
   NSMutableDictionary* infos;
   Class originalClass;
 
-  infos = objc_getAssociatedObject(self, __assocKey);
+  infos = objc_getAssociatedObject(self, kAssocKey);
 
   if (infos == nil) {
     return object_getClass(self);
   }
 
-  originalClass = [infos objectForKey:__assocKeyOriginalClass];
+  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   if (originalClass == nil) {
     return object_getClass(self);
@@ -101,14 +96,14 @@ static void __init(void) {
   NSMutableArray* classes;
   Class originalClass;
 
-  infos = objc_getAssociatedObject(self, __assocKey);
+  infos = objc_getAssociatedObject(self, kAssocKey);
 
   if (infos == nil) {
     return;
   }
 
-  classes = [infos objectForKey:__assocKeyClasses];
-  originalClass = [infos objectForKey:__assocKeyOriginalClass];
+  classes = [infos objectForKey:kAssocKeyClasses];
+  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   if (classes.count == 0) {
     object_setClass(self, originalClass);
@@ -126,14 +121,14 @@ static void __init(void) {
   NSMutableArray* classes;
   Class originalClass;
 
-  infos = objc_getAssociatedObject(self, __assocKey);
+  infos = objc_getAssociatedObject(self, kAssocKey);
 
   if (infos == nil) {
     return;
   }
 
-  classes = [infos objectForKey:__assocKeyClasses];
-  originalClass = [infos objectForKey:__assocKeyOriginalClass];
+  classes = [infos objectForKey:kAssocKeyClasses];
+  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   [classes removeAllObjects];
 
@@ -145,14 +140,14 @@ static void __init(void) {
   NSMutableArray* classes;
   Class originalClass;
 
-  infos = objc_getAssociatedObject(self, __assocKey);
+  infos = objc_getAssociatedObject(self, kAssocKey);
 
   if (infos == nil) {
     return NO;
   }
 
-  classes = [infos objectForKey:__assocKeyClasses];
-  originalClass = [infos objectForKey:__assocKeyOriginalClass];
+  classes = [infos objectForKey:kAssocKeyClasses];
+  originalClass = [infos objectForKey:kAssocKeyOriginalClass];
 
   if (classes.count > 0 && [classes lastObject] != originalClass) {
     return YES;
@@ -162,7 +157,6 @@ static void __init(void) {
 
   return NO;
 }
-
 @end
 
 /****************************************************************************
@@ -171,29 +165,23 @@ static void __init(void) {
 
 @interface Foo : NSObject {
 }
-
 @end
 
 @interface Bar : NSObject {
 }
-
 @end
 
 @interface FooBar : NSObject {
 }
-
 @end
 
 @implementation Foo
-
 @end
 
 @implementation Bar
-
 @end
 
 @implementation FooBar
-
 @end
 
 int main(void) {
