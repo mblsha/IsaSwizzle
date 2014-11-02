@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 
 #import "NSObject+IsaSwizzle.h"
+#import <objc/runtime.h>
 
 // MARK: - testIsaSwizzle classes
 @interface Foo : NSObject {
@@ -36,8 +37,8 @@
 // MARK: - testKVO classes
 @interface Person : NSObject {
 }
-@property (retain) NSString* firstName;
-@property (retain) NSString* lastName;
+@property(retain) NSString* firstName;
+@property(retain) NSString* lastName;
 @end
 
 @implementation Person
@@ -48,6 +49,26 @@
 }
 @end
 
+@interface PersonWatcher : NSObject {
+}
+@end
+
+@implementation PersonWatcher
+- (void)observeValueForKeyPath:(NSString*)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary*)change
+                       context:(void*)context {
+  //  if ([keyPath isEqual:@"openingBalance"]) {
+  //    [openingBalanceInspectorField setObjectValue:
+  //     [change objectForKey:NSKeyValueChangeNewKey]];
+  //  }
+
+  [super observeValueForKeyPath:keyPath
+                       ofObject:object
+                         change:change
+                        context:context];
+}
+@end
 // MARK: - testing code
 @interface IsaSwizzleTest : XCTestCase
 @end
@@ -86,7 +107,8 @@
   }
   @catch (NSException* e) {
     XCTAssert([[e name] isEqual:@"NSInvalidArgumentException"]);
-    XCTAssert([[e reason] hasPrefix:@"-[FooBar length]: unrecognized selector sent to instance"]);
+    XCTAssert([[e reason]
+        hasPrefix:@"-[FooBar length]: unrecognized selector sent to instance"]);
   }
 
   [s restoreClass];
@@ -99,12 +121,30 @@
 }
 
 - (void)testKVO {
+  PersonWatcher* watcher = [[[PersonWatcher alloc] init] autorelease];
   Person* person = [[Person alloc] init];
   person.firstName = @"First";
   person.lastName = @"Last";
   XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
+  XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"Person"]);
   XCTAssert([person.firstName isEqual:@"First"]);
   XCTAssert([person.lastName isEqual:@"Last"]);
+
+  [person
+      addObserver:watcher
+       forKeyPath:@"firstName"
+          options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
+          context:NULL];
+
+  // adding KVO observer changes the isa pointer on the observed class
+  XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
+  XCTAssert([NSStringFromClass(object_getClass(person))
+      isEqual:@"NSKVONotifying_Person"]);
+
+  [person removeObserver:watcher forKeyPath:@"firstName"];
+
+  XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
+  XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"Person"]);
 
   [person release];
 }
