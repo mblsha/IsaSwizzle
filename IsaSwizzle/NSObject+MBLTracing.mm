@@ -7,10 +7,38 @@
 //
 
 #import "NSObject+MBLTracing.h"
+#import "NSObject+MBLIsaSwizzle.h"
+
+@interface MBLTracer : NSObject {
+  
+}
+@end
+
+@implementation MBLTracer : NSObject
+@end
+
+namespace {
+NSString* const kTracingException = @"MBLTracingException";
+}
 
 @implementation NSObject (MBLTracing)
 
-- (void)mbl_startTracing {}
-- (void)mbl_endTracing {}
+- (void)mbl_startTracing {
+  if ([self mbl_hasCustomClass]) {
+    [NSException raise:kTracingException format:@"[self mbl_hasCustomClass]"];
+    return;
+  }
+
+  [self mbl_setClass:[MBLTracer class]];
+}
+
+- (void)mbl_endTracing {
+  if (![self mbl_hasCustomClass]) {
+    [NSException raise:kTracingException format:@"![self mbl_hasCustomClass]"];
+    return;
+  }
+
+  [self mbl_restoreOriginalClass];
+}
 
 @end

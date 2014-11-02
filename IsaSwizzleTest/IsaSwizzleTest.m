@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "NSObject+MBLIsaSwizzle.h"
+#import "NSObject+MBLTracing.h"
 #import <objc/runtime.h>
 
 // MARK: - testIsaSwizzle classes
@@ -142,6 +143,22 @@
 
   [person removeObserver:watcher forKeyPath:@"firstName"];
 
+  XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
+  XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"Person"]);
+
+  [person release];
+}
+
+- (void)testTracing {
+  Person* person = [[Person alloc] init];
+  XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
+  XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"Person"]);
+
+  [person mbl_startTracing];  
+  XCTAssert([NSStringFromClass([person class]) isEqual:@"MBLTracer"]);
+  XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"MBLTracer"]);
+
+  [person mbl_endTracing];  
   XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
   XCTAssert([NSStringFromClass(object_getClass(person)) isEqual:@"Person"]);
 
