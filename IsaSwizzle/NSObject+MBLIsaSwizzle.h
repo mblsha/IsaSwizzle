@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject (ISASwizzle)
-- (void)setClass:(Class)cls;
-- (Class)originalClass;
-- (void)restoreClass;
-- (void)restoreOriginalClass;
-- (BOOL)hasCustomClass;
+@interface NSObject (MBLISASwizzle)
+- (void)mbl_setClass:(Class)cls;
+- (Class)mbl_originalClass;
+- (void)mbl_restoreClass;
+- (void)mbl_restoreOriginalClass;
+- (BOOL)mbl_hasCustomClass;
 @end

@@ -8,7 +8,7 @@
 
 // copied from https://github.com/macmade/Code-Tests/blob/master/Objective-C/isa-swizzle.m
 
-#import "NSObject+IsaSwizzle.h"
+#import "NSObject+MBLIsaSwizzle.h"
 
 #import <objc/runtime.h>
 
@@ -18,8 +18,8 @@ namespace {
   NSString* const kAssocKeyClasses = @"ISASwizzle_NSObject_Classes";
 }
 
-@implementation NSObject (ISASwizzle)
-- (void)setClass:(Class)cls {
+@implementation NSObject (MBLISASwizzle)
+- (void)mbl_setClass:(Class)cls {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     infos = [[@{
@@ -40,7 +40,7 @@ namespace {
   object_setClass(self, cls);
 }
 
-- (Class)originalClass {
+- (Class)mbl_originalClass {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return object_getClass(self);
@@ -54,7 +54,7 @@ namespace {
   return originalClass;
 }
 
-- (void)restoreClass {
+- (void)mbl_restoreClass {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return;
@@ -74,7 +74,7 @@ namespace {
   }
 }
 
-- (void)restoreOriginalClass {
+- (void)mbl_restoreOriginalClass {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return;
@@ -87,7 +87,7 @@ namespace {
   object_setClass(self, originalClass);
 }
 
-- (BOOL)hasCustomClass {
+- (BOOL)mbl_hasCustomClass {
   NSMutableDictionary* infos = objc_getAssociatedObject(self, kAssocKey);
   if (infos == nil) {
     return NO;

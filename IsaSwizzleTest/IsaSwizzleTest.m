@@ -6,10 +6,9 @@
 //  Copyright (c) 2014 Michail Pishchagin. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
 
-#import "NSObject+IsaSwizzle.h"
+#import "NSObject+MBLIsaSwizzle.h"
 #import <objc/runtime.h>
 
 // MARK: - testIsaSwizzle classes
@@ -88,19 +87,19 @@
 
   NSString* s = @"hello, world";
   XCTAssert([NSStringFromClass([s class]) isEqual:@"__NSCFConstantString"]);
-  XCTAssertEqual([s hasCustomClass], NO);
+  XCTAssertEqual([s mbl_hasCustomClass], NO);
 
-  [s setClass:[Foo class]];
+  [s mbl_setClass:[Foo class]];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"Foo"]);
-  XCTAssertEqual([s hasCustomClass], YES);
+  XCTAssertEqual([s mbl_hasCustomClass], YES);
 
-  [s setClass:[Bar class]];
+  [s mbl_setClass:[Bar class]];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"Bar"]);
-  XCTAssertEqual([s hasCustomClass], YES);
+  XCTAssertEqual([s mbl_hasCustomClass], YES);
 
-  [s setClass:[FooBar class]];
+  [s mbl_setClass:[FooBar class]];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"FooBar"]);
-  XCTAssertEqual([s hasCustomClass], YES);
+  XCTAssertEqual([s mbl_hasCustomClass], YES);
 
   @try {
     [s length];
@@ -111,13 +110,13 @@
         hasPrefix:@"-[FooBar length]: unrecognized selector sent to instance"]);
   }
 
-  [s restoreClass];
+  [s mbl_restoreClass];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"Bar"]);
-  XCTAssertEqual([s hasCustomClass], YES);
+  XCTAssertEqual([s mbl_hasCustomClass], YES);
 
-  [s restoreOriginalClass];
+  [s mbl_restoreOriginalClass];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"__NSCFConstantString"]);
-  XCTAssertEqual([s hasCustomClass], NO);
+  XCTAssertEqual([s mbl_hasCustomClass], NO);
 }
 
 - (void)testKVO {

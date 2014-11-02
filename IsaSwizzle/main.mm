@@ -1,4 +1,4 @@
-#import "NSObject+IsaSwizzle.h"
+#import "NSObject+MBLIsaSwizzle.h"
 
 /****************************************************************************
  * TESTING
@@ -32,13 +32,13 @@ int main(void) {
     s = @"hello, world";
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
-    [s setClass:[Foo class]];
+    [s mbl_setClass:[Foo class]];
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
-    [s setClass:[Bar class]];
+    [s mbl_setClass:[Bar class]];
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
-    [s setClass:[FooBar class]];
+    [s mbl_setClass:[FooBar class]];
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
     @try {
@@ -50,10 +50,10 @@ int main(void) {
       NSLog(@"Caught expected exception: %@ - %@", [e name], [e reason]);
     }
 
-    [s restoreClass];
+    [s mbl_restoreClass];
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
 
-    [s restoreOriginalClass];
+    [s mbl_restoreOriginalClass];
     NSLog(@"Object is now: %@", NSStringFromClass([s class]));
   }
 
