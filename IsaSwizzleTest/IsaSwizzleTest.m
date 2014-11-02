@@ -11,6 +11,7 @@
 
 #import "NSObject+IsaSwizzle.h"
 
+// MARK: - testIsaSwizzle classes
 @interface Foo : NSObject {
 }
 @end
@@ -32,6 +33,22 @@
 @implementation FooBar
 @end
 
+// MARK: - testKVO classes
+@interface Person : NSObject {
+}
+@property (retain) NSString* firstName;
+@property (retain) NSString* lastName;
+@end
+
+@implementation Person
+- (void)dealloc {
+  self.firstName = nil;
+  self.lastName = nil;
+  [super dealloc];
+}
+@end
+
+// MARK: - testing code
 @interface IsaSwizzleTest : XCTestCase
 @end
 
@@ -45,7 +62,7 @@
   [super tearDown];
 }
 
-- (void)testExample {
+- (void)testIsaSwizzle {
   XCTAssert(YES, @"Pass");
 
   NSString* s = @"hello, world";
@@ -79,6 +96,17 @@
   [s restoreOriginalClass];
   XCTAssert([NSStringFromClass([s class]) isEqual:@"__NSCFConstantString"]);
   XCTAssertEqual([s hasCustomClass], NO);
+}
+
+- (void)testKVO {
+  Person* person = [[Person alloc] init];
+  person.firstName = @"First";
+  person.lastName = @"Last";
+  XCTAssert([NSStringFromClass([person class]) isEqual:@"Person"]);
+  XCTAssert([person.firstName isEqual:@"First"]);
+  XCTAssert([person.lastName isEqual:@"Last"]);
+
+  [person release];
 }
 
 @end
