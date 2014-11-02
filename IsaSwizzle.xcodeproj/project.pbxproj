@@ -202,6 +202,7 @@
 		7938A4D21A0615BD00CD3F8F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -209,6 +210,7 @@
 		7938A4D31A0615BD00CD3F8F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
