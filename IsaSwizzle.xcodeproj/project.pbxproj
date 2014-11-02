@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		790E7CAB1A061CEA009E6824 /* IsaSwizzleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 790E7CAA1A061CEA009E6824 /* IsaSwizzleTest.m */; };
+		790E7CB11A061D0A009E6824 /* NSObject+IsaSwizzle.mm in Sources */ = {isa = PBXBuildFile; fileRef = 790E7CB01A061D0A009E6824 /* NSObject+IsaSwizzle.mm */; };
+		790E7CB21A061D0A009E6824 /* NSObject+IsaSwizzle.mm in Sources */ = {isa = PBXBuildFile; fileRef = 790E7CB01A061D0A009E6824 /* NSObject+IsaSwizzle.mm */; };
 		7938A4CE1A0615BD00CD3F8F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7938A4CD1A0615BD00CD3F8F /* main.mm */; };
 /* End PBXBuildFile section */
 
@@ -23,11 +26,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		790E7CA61A061CEA009E6824 /* IsaSwizzleTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IsaSwizzleTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		790E7CA91A061CEA009E6824 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		790E7CAA1A061CEA009E6824 /* IsaSwizzleTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IsaSwizzleTest.m; sourceTree = "<group>"; };
+		790E7CAF1A061D0A009E6824 /* NSObject+IsaSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+IsaSwizzle.h"; sourceTree = "<group>"; };
+		790E7CB01A061D0A009E6824 /* NSObject+IsaSwizzle.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSObject+IsaSwizzle.mm"; sourceTree = "<group>"; };
 		7938A4CA1A0615BD00CD3F8F /* IsaSwizzle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IsaSwizzle; sourceTree = BUILT_PRODUCTS_DIR; };
 		7938A4CD1A0615BD00CD3F8F /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		790E7CA31A061CEA009E6824 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7938A4C71A0615BD00CD3F8F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -38,10 +53,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		790E7CA71A061CEA009E6824 /* IsaSwizzleTest */ = {
+			isa = PBXGroup;
+			children = (
+				790E7CAA1A061CEA009E6824 /* IsaSwizzleTest.m */,
+				790E7CA81A061CEA009E6824 /* Supporting Files */,
+			);
+			path = IsaSwizzleTest;
+			sourceTree = "<group>";
+		};
+		790E7CA81A061CEA009E6824 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				790E7CA91A061CEA009E6824 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		7938A4C11A0615BD00CD3F8F = {
 			isa = PBXGroup;
 			children = (
 				7938A4CC1A0615BD00CD3F8F /* IsaSwizzle */,
+				790E7CA71A061CEA009E6824 /* IsaSwizzleTest */,
 				7938A4CB1A0615BD00CD3F8F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				7938A4CA1A0615BD00CD3F8F /* IsaSwizzle */,
+				790E7CA61A061CEA009E6824 /* IsaSwizzleTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -58,6 +92,8 @@
 			isa = PBXGroup;
 			children = (
 				7938A4CD1A0615BD00CD3F8F /* main.mm */,
+				790E7CAF1A061D0A009E6824 /* NSObject+IsaSwizzle.h */,
+				790E7CB01A061D0A009E6824 /* NSObject+IsaSwizzle.mm */,
 			);
 			path = IsaSwizzle;
 			sourceTree = "<group>";
@@ -65,6 +101,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		790E7CA51A061CEA009E6824 /* IsaSwizzleTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 790E7CAC1A061CEA009E6824 /* Build configuration list for PBXNativeTarget "IsaSwizzleTest" */;
+			buildPhases = (
+				790E7CA21A061CEA009E6824 /* Sources */,
+				790E7CA31A061CEA009E6824 /* Frameworks */,
+				790E7CA41A061CEA009E6824 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IsaSwizzleTest;
+			productName = IsaSwizzleTest;
+			productReference = 790E7CA61A061CEA009E6824 /* IsaSwizzleTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		7938A4C91A0615BD00CD3F8F /* IsaSwizzle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7938A4D11A0615BD00CD3F8F /* Build configuration list for PBXNativeTarget "IsaSwizzle" */;
@@ -91,6 +144,9 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Michail Pishchagin";
 				TargetAttributes = {
+					790E7CA51A061CEA009E6824 = {
+						CreatedOnToolsVersion = 6.1;
+					};
 					7938A4C91A0615BD00CD3F8F = {
 						CreatedOnToolsVersion = 6.1;
 					};
@@ -109,15 +165,36 @@
 			projectRoot = "";
 			targets = (
 				7938A4C91A0615BD00CD3F8F /* IsaSwizzle */,
+				790E7CA51A061CEA009E6824 /* IsaSwizzleTest */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		790E7CA41A061CEA009E6824 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		790E7CA21A061CEA009E6824 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				790E7CB21A061D0A009E6824 /* NSObject+IsaSwizzle.mm in Sources */,
+				790E7CAB1A061CEA009E6824 /* IsaSwizzleTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7938A4C61A0615BD00CD3F8F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				790E7CB11A061D0A009E6824 /* NSObject+IsaSwizzle.mm in Sources */,
 				7938A4CE1A0615BD00CD3F8F /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +202,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		790E7CAD1A061CEA009E6824 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = IsaSwizzleTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		790E7CAE1A061CEA009E6824 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = IsaSwizzleTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		7938A4CF1A0615BD00CD3F8F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -218,6 +327,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		790E7CAC1A061CEA009E6824 /* Build configuration list for PBXNativeTarget "IsaSwizzleTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				790E7CAD1A061CEA009E6824 /* Debug */,
+				790E7CAE1A061CEA009E6824 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		7938A4C51A0615BD00CD3F8F /* Build configuration list for PBXProject "IsaSwizzle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -234,6 +351,7 @@
 				7938A4D31A0615BD00CD3F8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

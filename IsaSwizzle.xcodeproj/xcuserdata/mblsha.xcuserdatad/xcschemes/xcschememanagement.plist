@@ -9,9 +9,24 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>IsaSwizzleTest.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>790E7C981A061CC3009E6824</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>790E7CA51A061CEA009E6824</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>7938A4C91A0615BD00CD3F8F</key>
 		<dict>
 			<key>primary</key>
