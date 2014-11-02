@@ -10,6 +10,8 @@
 #import "NSObject+MBLIsaSwizzle.h"
 #import <objc/runtime.h>
 
+#include <vector>
+
 @interface MBLTracer : NSObject {
 }
 @end
@@ -17,6 +19,21 @@
 @implementation MBLTracer : NSObject
 - (id)mbl_class {
   return [self mbl_originalClass];
+}
+
+- (void)mbl_retain {
+  NSLog(@"retain");
+  [super retain];
+}
+
+- (void)mbl_release {
+  NSLog(@"release");
+  [super release];
+}
+
+- (void)mbl_autorelease {
+  NSLog(@"autorelease");
+  [super autorelease];
 }
 
 - (void)mbl_dealloc {
@@ -55,14 +72,23 @@ const char* kTracingPrefix = "MBLTracing_";
     subclass =
         objc_allocateClassPair(originalClass, [subclassName UTF8String], 0);
     NSAssert(subclass != nil, @"subclass != nil");
-    
-    IMP dealloc = class_getMethodImplementation([MBLTracer class],
-                                                @selector(mbl_dealloc));
-    class_addMethod(subclass, @selector(dealloc), dealloc, "v@:");
 
-    IMP klass = class_getMethodImplementation([MBLTracer class],
-                                                @selector(mbl_class));
-    class_addMethod(subclass, @selector(class), klass, "v@:");
+    std::vector<SEL> selectors{
+      @selector(class),
+      @selector(retain),
+      @selector(release),
+      @selector(autorelease),
+      @selector(dealloc)
+    };
+    for (SEL selector : selectors) {
+      NSString* mbl_selectorName =
+          [NSString stringWithFormat:@"mbl_%@", NSStringFromSelector(selector)];
+      SEL mbl_selector = NSSelectorFromString(mbl_selectorName);
+
+      IMP imp = class_getMethodImplementation([MBLTracer class], mbl_selector);
+      // NB: watch out for type encodgng!
+      class_addMethod(subclass, selector, imp, "v@:");
+    }
 
     objc_registerClassPair(subclass);
   }
