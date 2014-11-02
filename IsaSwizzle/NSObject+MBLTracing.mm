@@ -15,6 +15,10 @@
 @end
 
 @implementation MBLTracer : NSObject
+- (id)mbl_class {
+  return [self mbl_originalClass];
+}
+
 - (void)mbl_dealloc {
   NSLog(@"dealloc");
   [super dealloc];
@@ -55,6 +59,10 @@ const char* kTracingPrefix = "MBLTracing_";
     IMP dealloc = class_getMethodImplementation([MBLTracer class],
                                                 @selector(mbl_dealloc));
     class_addMethod(subclass, @selector(dealloc), dealloc, "v@:");
+
+    IMP klass = class_getMethodImplementation([MBLTracer class],
+                                                @selector(mbl_class));
+    class_addMethod(subclass, @selector(class), klass, "v@:");
 
     objc_registerClassPair(subclass);
   }
