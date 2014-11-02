@@ -10,7 +10,7 @@
 #import "NSObject+MBLIsaSwizzle.h"
 #import <objc/runtime.h>
 
-#include <vector>
+#include <map>
 
 @interface MBLTracer : NSObject {
 }
@@ -21,9 +21,9 @@
   return [self mbl_originalClass];
 }
 
-- (void)mbl_retain {
+- (id)mbl_retain {
   NSLog(@"retain");
-  [super retain];
+  return [super retain];
 }
 
 - (void)mbl_release {
@@ -31,14 +31,19 @@
   [super release];
 }
 
-- (void)mbl_autorelease {
+- (id)mbl_autorelease {
   NSLog(@"autorelease");
-  [super autorelease];
+  return [super autorelease];
 }
 
 - (void)mbl_dealloc {
   NSLog(@"dealloc");
   [super dealloc];
+}
+
+- (void)mbl_trace:(NSString*)message {
+  NSLog(@"%@ %@\n%@", [self debugDescription], message,
+        [NSThread callStackSymbols]);
 }
 @end
 
@@ -73,21 +78,22 @@ const char* kTracingPrefix = "MBLTracing_";
         objc_allocateClassPair(originalClass, [subclassName UTF8String], 0);
     NSAssert(subclass != nil, @"subclass != nil");
 
-    std::vector<SEL> selectors{
-      @selector(class),
-      @selector(retain),
-      @selector(release),
-      @selector(autorelease),
-      @selector(dealloc)
+    // v@: -- void (id self, SEL _cmd)
+    std::map<SEL, const char*> selectors{
+        {@selector(class), "@@:"},
+        {@selector(retain), "@@:"},
+        {@selector(release), "v@:"},
+        {@selector(autorelease), "@@:"},
+        {@selector(dealloc), "v@:"},
     };
-    for (SEL selector : selectors) {
-      NSString* mbl_selectorName =
-          [NSString stringWithFormat:@"mbl_%@", NSStringFromSelector(selector)];
+    for (auto selector : selectors) {
+      NSString* mbl_selectorName = [NSString
+          stringWithFormat:@"mbl_%@", NSStringFromSelector(selector.first)];
       SEL mbl_selector = NSSelectorFromString(mbl_selectorName);
 
       IMP imp = class_getMethodImplementation([MBLTracer class], mbl_selector);
       // NB: watch out for type encodgng!
-      class_addMethod(subclass, selector, imp, "v@:");
+      class_addMethod(subclass, selector.first, imp, selector.second);
     }
 
     objc_registerClassPair(subclass);
